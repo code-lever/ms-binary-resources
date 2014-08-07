@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Resources;
 
 /// Build via 'mcs DumpResources.cs'
