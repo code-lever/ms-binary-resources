@@ -2,6 +2,8 @@
 
 TODO: Write a gem description
 
+* https://github.com/mosa/Mono-Class-Libraries/blob/master/mcs/class/corlib/System.Resources/ResourceReader.cs
+
 ## Installation
 
 Add this line to your application's Gemfile:
