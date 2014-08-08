@@ -62,11 +62,7 @@ module Ms
         @resource_count = read_uint32
         @type_count = read_uint32
 
-        # XXX Need to read type names if available
-        @type_names = []
-        if @type_count > 0
-          raise 'Type names are unsupported'
-        end
+        @type_names = @type_count.times.map { read_string }
 
         # next section is 8-byte aligned, there will be PADPADPAD characters to make it so
         pad_alignment = @file.pos & 0x07
