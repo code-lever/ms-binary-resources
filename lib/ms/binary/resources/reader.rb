@@ -1,4 +1,5 @@
 require 'open-uri'
+require 'ostruct'
 
 module Ms
   module BinaryResources
@@ -9,26 +10,40 @@ module Ms
                   :resource_count, :type_count
 
       def initialize(uri)
-        file = open(uri, 'rb')
-        @manager_magic = file.read(4).unpack('L<').first
+        @file = open(uri, 'rb')
+        read_headers
+      rescue => e
+        raise ArgumentError, "@file does not appear to be a resources @file (#{e})"
+        @file.close
+      end
+
+      def close
+        @file.close
+        @file = nil
+      end
+
+      private
+
+      def read_headers
+        @manager_magic = read_uint32
         raise 'magic (%08X)' % manager_magic unless MAGIC_NUMBER == manager_magic
 
-        @manager_version = file.read(4).unpack('L<').first
-        @manager_length = file.read(4).unpack('L<').first
+        @manager_version = read_uint32
+        @manager_length = read_uint32
 
         if 1 == manager_version
-          @reader_class = file.read(@manager_length)
+          @reader_class = @file.read(@manager_length)
         else
           raise 'Unsupported manager version (%d)' % manager_version
         end
 
-        @resource_version = file.read(4).unpack('L<').first
+        @resource_version = read_uint32
         unless [1, 2].include?(resource_version)
           raise 'Unsupported resource version (%d)' % resource_version
         end
 
-        @resource_count = file.read(4).unpack('L<').first
-        @type_count = file.read(4).unpack('L<').first
+        @resource_count = read_uint32
+        @type_count = read_uint32
 
         # XXX Need to read type names if available
         @type_names = []
@@ -37,33 +52,66 @@ module Ms
         end
 
         # next section is 8-byte aligned, there will be PADPADPAD characters to make it so
-        pad_alignment = file.pos & 0x07
+        pad_alignment = @file.pos & 0x07
         pad_count = pad_alignment > 0 ? 8 - pad_alignment : 0
-        padding = file.read(pad_count)
+        padding = @file.read(pad_count)
 
         # XXX verify padding value, regex matching P PA PAD PADP PADPA PADPAD PADPADP PADPADPA
 
-        @hashes = resource_count.times.map do
-          file.read(4).unpack('L<').first
-        end
+        @hashes = resource_count.times.map { read_uint32 }
+        @positions = resource_count.times.map { read_uint32 }
 
-        @positions = resource_count.times.map do
-          file.read(4).unpack('L<').first
-        end
+        @data_section_offset = read_uint32
+        @name_section_offset = @file.pos
 
-        @data_section_offset = file.read(4).unpack('L<').first
-        @name_section_offset = file.pos
+        @resource_infos = @positions.map { |pos| read_resource_info(pos) }
 
-        @resource_infos = resource_count.times.map do
-          # XXX seek around to cache resource information
-        end
+        @file.seek(@name_section_offset)
+      end
 
-        file.seek(@name_section_offset)
+      def read_resource_info(name_position)
+        seek_to_name(name_position)
+        length = read_7bit_encoded_int
+        name = read(length)
 
-      rescue => e
-        raise ArgumentError, "File does not appear to be a resources file (#{e})"
-      ensure
-        file.close
+        seek_to_data(read_uint32)
+        type_index = read_7bit_encoded_int
+
+        OpenStruct.new name: name, value_position: @file.pos, type_index: type_index
+      end
+
+      def read(bytes)
+        @file.read(bytes)
+      end
+
+      def read_byte
+        @file.read(1).unpack('C').first
+      end
+
+      def read_uint32
+        @file.read(4).unpack('L<').first
+      end
+
+      def read_7bit_encoded_int
+        ret = 0;
+        shift = 0;
+        b = 0
+
+        begin
+          b = read_byte
+          ret = ret | ((b & 0x7f) << shift)
+          shift += 7
+        end while (b & 0x80) == 0x80
+
+        ret
+      end
+
+      def seek_to_name(position)
+        @file.seek(@name_section_offset + position)
+      end
+
+      def seek_to_data(position)
+        @file.seek(@data_section_offset + position)
       end
 
     end
