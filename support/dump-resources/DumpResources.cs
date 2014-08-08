@@ -5,9 +5,9 @@ using System.Resources;
 /// Build via 'mcs DumpResources.cs'
 public class DumpResources
 {
-   public static void Main()
+   public static void Main(string[] args)
    {
-        ResourceReader rdr = new ResourceReader("Example.resources");
+        ResourceReader rdr = new ResourceReader(args[0]);
         Console.WriteLine(rdr.GetType());
         IDictionaryEnumerator dict = rdr.GetEnumerator();
         while (dict.MoveNext()) {
