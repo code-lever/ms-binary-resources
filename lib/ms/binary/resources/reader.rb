@@ -21,8 +21,13 @@ module Ms
         info_for_name(name)
       end
 
+      def keys
+        @resource_infos.map(&:name)
+      end
+
       def [](name)
-        read_value(info_for_name(name))
+        info = info_for_name(name)
+        info ? read_value(info) : nil
       end
 
       def close
