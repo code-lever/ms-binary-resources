@@ -1,6 +1,8 @@
 module Ms
   module BinaryResources
 
+    MAGIC_NUMBER = 0xBEEFCACE
+
     RESOURCE_TYPES = {
       null: 0,
       string: 1,
