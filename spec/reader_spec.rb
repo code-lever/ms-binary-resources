@@ -2,12 +2,16 @@ require 'spec_helper'
 
 describe Ms::BinaryResources::Reader do
 
-  describe '.new' do
+  context 'with invalid derp.bin' do
 
-    it 'fails when no file is supplied' do
-      expect do
-        described_class.new(nil)
-      end.to raise_error(ArgumentError)
+    describe '.new' do
+
+      invalid_data_files.each do |file|
+        it "raises when created with #{file}" do
+          expect { described_class.new(file) }.to raise_error
+        end
+      end
+
     end
 
   end
