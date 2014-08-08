@@ -6,6 +6,8 @@ module Ms
 
     class Reader
 
+      include Enumerable
+
       attr_reader :manager_magic, :manager_version, :manager_length, :resource_version,
                   :resource_count, :type_count
 
@@ -15,6 +17,10 @@ module Ms
       rescue => e
         raise ArgumentError, "file does not appear to be a resources @file (#{e})"
         @file.close
+      end
+
+      def each(&block)
+        keys.each { |k| block.call(k, (self[k] rescue nil)) }
       end
 
       def key?(name)
