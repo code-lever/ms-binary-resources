@@ -1,4 +1,4 @@
-# Ms::BinaryResources
+# Ms::BinaryResources [![Build Status](https://travis-ci.org/code-lever/ms-binary-resources.png)](https://travis-ci.org/code-lever/ms-binary-resources) [![Dependency Status](https://gemnasium.com/code-lever/ms-binary-resources.png)](https://gemnasium.com/code-lever/ms-binary-resources) [![Code Climate](https://codeclimate.com/github/code-lever/ms-binary-resources.png)](https://codeclimate.com/github/code-lever/ms-binary-resources)
 
 A way to read Microsoft's binary resource files in Ruby.
 
