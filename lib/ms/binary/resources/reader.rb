@@ -30,6 +30,36 @@ module Ms
         @resource_count = file.read(4).unpack('L<').first
         @type_count = file.read(4).unpack('L<').first
 
+        # XXX Need to read type names if available
+        @type_names = []
+        if @type_count > 0
+          raise 'Type names are unsupported'
+        end
+
+        # next section is 8-byte aligned, there will be PADPADPAD characters to make it so
+        pad_alignment = file.pos & 0x07
+        pad_count = pad_alignment > 0 ? 8 - pad_alignment : 0
+        padding = file.read(pad_count)
+
+        # XXX verify padding value, regex matching P PA PAD PADP PADPA PADPAD PADPADP PADPADPA
+
+        @hashes = resource_count.times.map do
+          file.read(4).unpack('L<').first
+        end
+
+        @positions = resource_count.times.map do
+          file.read(4).unpack('L<').first
+        end
+
+        @data_section_offset = file.read(4).unpack('L<').first
+        @name_section_offset = file.pos
+
+        @resource_infos = resource_count.times.map do
+          # XXX seek around to cache resource information
+        end
+
+        file.seek(@name_section_offset)
+
       rescue => e
         raise ArgumentError, "File does not appear to be a resources file (#{e})"
       ensure
