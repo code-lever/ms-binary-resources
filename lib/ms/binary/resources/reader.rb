@@ -83,8 +83,6 @@ module Ms
         pad_count = pad_alignment > 0 ? 8 - pad_alignment : 0
         padding = @file.read(pad_count)
 
-        # XXX verify padding value, regex matching P PA PAD PADP PADPA PADPAD PADPADP PADPADPA
-
         @hashes = resource_count.times.map { read_uint32 }
         @positions = resource_count.times.map { read_uint32 }
 
@@ -140,13 +138,13 @@ module Ms
       end
 
       def read_7bit_encoded_int
-        ret = 0;
-        shift = 0;
+        ret = 0
+        shift = 0
         b = 0
 
         begin
           b = read_byte
-          ret |= ((b & 0x7f) << shift)
+          ret |= (b & 0x7f) << shift
           shift += 7
         end while (b & 0x80) == 0x80
 
@@ -155,7 +153,6 @@ module Ms
 
       def read_string
         read(read_7bit_encoded_int)
-        # XXX encoding?
       end
 
       def read_value(resource_info)
