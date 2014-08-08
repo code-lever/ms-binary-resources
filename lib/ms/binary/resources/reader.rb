@@ -13,8 +13,16 @@ module Ms
         @file = open(uri, 'rb')
         read_headers
       rescue => e
-        raise ArgumentError, "@file does not appear to be a resources @file (#{e})"
+        raise ArgumentError, "file does not appear to be a resources @file (#{e})"
         @file.close
+      end
+
+      def key?(name)
+        info_for_name(name)
+      end
+
+      def [](name)
+        read_value(info_for_name(name))
       end
 
       def close
@@ -23,6 +31,10 @@ module Ms
       end
 
       private
+
+      def info_for_name(name)
+        @resource_infos.find { |info| info.name.encode(name.encoding) == name }
+      end
 
       def read_headers
         @manager_magic = read_uint32
@@ -72,7 +84,7 @@ module Ms
       def read_resource_info(name_position)
         seek_to_name(name_position)
         length = read_7bit_encoded_int
-        name = read(length)
+        name = read(length).encode('UTF-16LE', 'UTF-16LE')
 
         seek_to_data(read_uint32)
         type_index = read_7bit_encoded_int
@@ -104,6 +116,21 @@ module Ms
         end while (b & 0x80) == 0x80
 
         ret
+      end
+
+      def read_string
+        read(read_7bit_encoded_int)
+        # XXX encoding?
+      end
+
+      def read_value(resource_info)
+        @file.seek(resource_info.value_position)
+
+        case resource_info.type_index
+        when RESOURCE_TYPES[:string]; read_string
+        else
+          raise 'Unsupported type index: %d' % resource_info.type_index
+        end
       end
 
       def seek_to_name(position)
