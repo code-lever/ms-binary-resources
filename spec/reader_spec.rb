@@ -45,25 +45,41 @@ describe Ms::BinaryResources::Reader do
 
     end
 
+    describe '#type_of' do
+
+      context 'with existing key Label1' do
+
+        specify { expect(subject.type_of('Label1')).to eql(:string) }
+
+      end
+
+      context 'with non-existant key Label155' do
+
+        specify { expect(subject.type_of('Label155')).to be_nil }
+
+      end
+
+    end
+
     describe '#[]' do
 
       {
-          'Title' => '"Contact Information"',
-          'Label1' => '"First Name:"',
-          'Label2' => '"Middle Name:"',
-          'Label3' => '"Last Name:"',
-          'Label4' => '"SSN:"',
-          'Label5' => '"Street Address:"',
-          'Label6' => '"City:"',
-          'Label7' => '"State:"',
-          'Label8' => '"Zip Code:"',
-          'Label9' => '"Home Phone:"',
-          'Label10' => '"Business Phone:"',
-          'Label11' => '"Mobile Phone:"',
-          'Label12' => '"Other Phone:"',
-          'Label13' => '"Fax:"',
-          'Label14' => '"Email Address:"',
-          'Label15' => '"Alternate Email Address:"',
+        'Title' => '"Contact Information"',
+        'Label1' => '"First Name:"',
+        'Label2' => '"Middle Name:"',
+        'Label3' => '"Last Name:"',
+        'Label4' => '"SSN:"',
+        'Label5' => '"Street Address:"',
+        'Label6' => '"City:"',
+        'Label7' => '"State:"',
+        'Label8' => '"Zip Code:"',
+        'Label9' => '"Home Phone:"',
+        'Label10' => '"Business Phone:"',
+        'Label11' => '"Mobile Phone:"',
+        'Label12' => '"Other Phone:"',
+        'Label13' => '"Fax:"',
+        'Label14' => '"Email Address:"',
+        'Label15' => '"Alternate Email Address:"',
       }.each do |key, value|
         it "is #{value} for #{key}" do
           expect(subject[key]).to eql(value)
@@ -91,6 +107,44 @@ describe Ms::BinaryResources::Reader do
     its(:resource_count) { should eql(59) }
 
     its(:type_count) { should eql(9) }
+
+    describe '#key?' do
+
+      context 'with existing key descriptionLabel.Text' do
+
+        specify { expect(subject.key?('descriptionLabel.Text')).to be_truthy }
+
+      end
+
+      context 'with non-existent key descriptionLabelzzz.Text' do
+
+        specify { expect(subject.key?('descriptionLabelzzz.Text')).to be_falsey }
+
+      end
+
+    end
+
+    describe '#type_of' do
+
+      context 'with existing key errorDetailsTextBox.Size w/unsupported type' do
+
+        specify { expect(subject.type_of('errorDetailsTextBox.Size')).to be_nil }
+
+      end
+
+      context 'with existing key panel1.TabIndex' do
+
+        specify { expect(subject.type_of('panel1.TabIndex')).to eql(:int32) }
+
+      end
+
+      context 'with non-existent key Label155' do
+
+        specify { expect(subject.type_of('Label155')).to be_nil }
+
+      end
+
+    end
 
   end
 

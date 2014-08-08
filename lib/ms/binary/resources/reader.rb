@@ -22,7 +22,15 @@ module Ms
       end
 
       def keys
-        @resource_infos.map(&:name)
+        @keys ||= @resource_infos.map(&:name)
+      end
+
+      def type_of(name)
+        info = info_for_name(name)
+        if info
+          type = RESOURCE_TYPES.find { |_,v| info.type_index == v }
+          type && type.first
+        end
       end
 
       def [](name)
