@@ -34,9 +34,9 @@ reader.key? 'keyxx'
 => false
 reader['key1']
 => 'some value'
-reader.type_of 'something numeric'
+reader.type_of 'key2'
 => :int32
-reader['something numeric']
+reader['key2']
 => 8675309
 ```
 
