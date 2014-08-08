@@ -5,7 +5,7 @@ require 'ms/binary/resources/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'ms-binary-resources'
-  spec.version       = Ms::Binary::Resources::VERSION
+  spec.version       = Ms::BinaryResources::VERSION
   spec.authors       = ['Nick Veys']
   spec.email         = ['nick@codelever.com']
   spec.summary       = %q{Read binary resource files}
