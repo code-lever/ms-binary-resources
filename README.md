@@ -1,8 +1,6 @@
 # Ms::BinaryResources
 
-TODO: Write a gem description
-
-* https://github.com/mosa/Mono-Class-Libraries/blob/master/mcs/class/corlib/System.Resources/ResourceReader.cs
+A way to read Microsoft's binary resource files in Ruby.
 
 ## Installation
 
@@ -37,6 +35,10 @@ reader['key1']
 ## Caveats
 
 Currently only string values are supported.
+
+## Thanks
+
+This is largely cribbed off of the [Mono Project's](https://github.com/mono/mono) class library implementation of ResourceReader and friends.
 
 ## Contributing
 
