@@ -1,4 +1,4 @@
-# Ms::Binary::Resources
+# Ms::BinaryResources
 
 TODO: Write a gem description
 
@@ -22,7 +22,21 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+reader = Ms::BinaryResources::Reader.new('/path/to/file')
+reader.keys
+=> ['key1', 'key2', ...]
+reader.key? 'key1'
+=> true
+reader.key? 'keyxx'
+=> false
+reader['key1']
+=> 'some value'
+```
+
+## Caveats
+
+Currently only string values are supported.
 
 ## Contributing
 
