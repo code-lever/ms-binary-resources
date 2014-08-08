@@ -1,7 +1,5 @@
 module Ms
-  module Binary
-    module Resources
-      VERSION = '0.0.1'
-    end
+  module BinaryResources
+    VERSION = '0.0.1'
   end
 end
