@@ -6,15 +6,21 @@ A way to read Microsoft's binary resource files in Ruby.
 
 Add this line to your application's Gemfile:
 
-    gem 'ms-binary-resources'
+```ruby
+gem 'ms-binary-resources'
+```
 
 And then execute:
 
-    $ bundle
+```
+$ bundle
+```
 
 Or install it yourself as:
 
-    $ gem install ms-binary-resources
+```
+$ gem install ms-binary-resources
+```
 
 ## Usage
 
