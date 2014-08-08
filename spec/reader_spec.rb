@@ -80,9 +80,9 @@ describe Ms::BinaryResources::Reader do
         'Label13' => '"Fax:"',
         'Label14' => '"Email Address:"',
         'Label15' => '"Alternate Email Address:"',
-      }.each do |key, value|
-        it "is #{value} for #{key}" do
-          expect(subject[key]).to eql(value)
+      }.each do |k,v|
+        it "is #{v} for #{k}" do
+          expect(subject[k]).to eql(v)
         end
       end
 
@@ -104,7 +104,7 @@ describe Ms::BinaryResources::Reader do
 
     its(:resource_version) { should eql(2) }
 
-    its(:resource_count) { should eql(59) }
+    its(:resource_count) { should eql(63) }
 
     its(:type_count) { should eql(9) }
 
@@ -126,22 +126,41 @@ describe Ms::BinaryResources::Reader do
 
     describe '#type_of' do
 
-      context 'with existing key errorDetailsTextBox.Size w/unsupported type' do
-
-        specify { expect(subject.type_of('errorDetailsTextBox.Size')).to be_nil }
-
+      {
+        'errorDetailsTextBox.Size' => nil,
+        'panel1.TabIndex16' => :int16,
+        'progressBar.TabIndex16' => :uint16,
+        'panel1.TabIndex32' => :int32,
+        'progressBar.TabIndex32' => :uint32,
+        'panel1.TabIndex64' => :int64,
+        'progressBar.TabIndex64' => :uint64,
+        'hello' => nil,
+      }.each do |k,v|
+        it "is #{v.inspect} for #{k}" do
+          expect(subject.type_of(k)).to eql(v)
+        end
       end
 
-      context 'with existing key panel1.TabIndex' do
+    end
 
-        specify { expect(subject.type_of('panel1.TabIndex')).to eql(:int32) }
+    describe '#[]' do
 
+      {
+        'panel1.TabIndex16' => 13,
+        'progressBar.TabIndex16' => 2500,
+        'panel1.TabIndex32' => 365,
+        'progressBar.TabIndex32' => 250000,
+        'panel1.TabIndex64' => 30,
+        'progressBar.TabIndex64' => 250000000000000,
+        'hello' => nil,
+      }.each do |k,v|
+        it "is #{v.inspect} for #{k}" do
+          expect(subject[k]).to eql(v)
+        end
       end
 
-      context 'with non-existent key Label155' do
-
-        specify { expect(subject.type_of('Label155')).to be_nil }
-
+      it 'raises for unsupported type' do
+        expect { subject['errorDetailsTextBox.Size'] }.to raise_error
       end
 
     end

@@ -279,11 +279,23 @@
   <data name="progressBar.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
-  <data name="panel1.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
+  <data name="panel1.TabIndex16" type="System.Int16, mscorlib">
+    <value>13</value>
   </data>
-  <data name="progressBar.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
+  <data name="progressBar.TabIndex16" type="System.UInt16, mscorlib">
+    <value>2500</value>
+  </data>
+  <data name="panel1.TabIndex32" type="System.Int32, mscorlib">
+    <value>365</value>
+  </data>
+  <data name="progressBar.TabIndex32" type="System.UInt32, mscorlib">
+    <value>250000</value>
+  </data>
+  <data name="panel1.TabIndex64" type="System.Int64, mscorlib">
+    <value>30</value>
+  </data>
+  <data name="progressBar.TabIndex64" type="System.UInt64, mscorlib">
+    <value>250000000000000</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>InstallProcessControl</value>

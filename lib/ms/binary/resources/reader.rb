@@ -106,11 +106,31 @@ module Ms
       end
 
       def read_byte
-        @file.read(1).unpack('C').first
+        read(1).unpack('C').first
+      end
+
+      def read_int16
+        read(2).unpack('s<').first
+      end
+
+      def read_uint16
+        read(2).unpack('S<').first
+      end
+
+      def read_int32
+        read(4).unpack('l<').first
       end
 
       def read_uint32
-        @file.read(4).unpack('L<').first
+        read(4).unpack('L<').first
+      end
+
+      def read_int64
+        read(8).unpack('q<').first
+      end
+
+      def read_uint64
+        read(8).unpack('Q<').first
       end
 
       def read_7bit_encoded_int
@@ -120,7 +140,7 @@ module Ms
 
         begin
           b = read_byte
-          ret = ret | ((b & 0x7f) << shift)
+          ret |= ((b & 0x7f) << shift)
           shift += 7
         end while (b & 0x80) == 0x80
 
@@ -137,6 +157,12 @@ module Ms
 
         case resource_info.type_index
         when RESOURCE_TYPES[:string]; read_string
+        when RESOURCE_TYPES[:int16];  read_int16
+        when RESOURCE_TYPES[:uint16]; read_uint16
+        when RESOURCE_TYPES[:int32];  read_int32
+        when RESOURCE_TYPES[:uint32]; read_uint32
+        when RESOURCE_TYPES[:int64];  read_int64
+        when RESOURCE_TYPES[:uint64]; read_uint64
         else
           raise 'Unsupported type index: %d' % resource_info.type_index
         end
