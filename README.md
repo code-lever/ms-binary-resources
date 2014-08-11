@@ -42,7 +42,7 @@ reader['key2']
 
 ## Caveats
 
-Currently only string values are supported.
+Currently only string, uint and int value types are supported.  Pull requests with additional types are great, include tests!
 
 ## Thanks
 
