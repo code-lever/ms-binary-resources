@@ -8,6 +8,10 @@ require 'awesome_print'
 require 'pathname'
 require 'ms/binary/resources'
 
+# Requires supporting ruby files with custom matchers and macros, etc,
+# in spec/support/ and its subdirectories.
+Dir[Pathname.new(File.dirname(__FILE__)).join('support/**/*.rb')].each { |f| require f }
+
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true
   config.run_all_when_everything_filtered = true
@@ -18,15 +22,4 @@ RSpec.configure do |config|
   # the seed, which is printed after each run.
   #     --seed 1234
   config.order = 'random'
-end
-
-def data_file(name)
-  File.expand_path("#{File.dirname(__FILE__)}/../support/data/#{name}")
-end
-
-def invalid_data_files
-  dir = "#{File.dirname(__FILE__)}/../support/data/invalid"
-  invalid = Dir.glob("#{dir}/**/*").select { |e| File.file? e }
-  invalid << __FILE__
-  invalid << 'not-really-a-file.resources'
 end
