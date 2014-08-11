@@ -25,7 +25,7 @@ $ gem install ms-binary-resources
 ## Usage
 
 ```ruby
-reader = Ms::BinaryResources::Reader.new('/path/to/file')
+reader = Ms::BinaryResources::Reader.new('/path/to/File.resources')
 reader.keys
 => ['key1', 'key2', ...]
 reader.key? 'key1'
