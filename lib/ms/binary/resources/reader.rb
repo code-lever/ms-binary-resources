@@ -164,7 +164,7 @@ module Ms
         when RESOURCE_TYPES[:int64];  read_int64
         when RESOURCE_TYPES[:uint64]; read_uint64
         else
-          raise 'Unsupported type index: %d' % resource_info.type_index
+          fail 'Unsupported type index: %d' % resource_info.type_index
         end
       end
 
