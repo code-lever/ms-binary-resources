@@ -8,14 +8,13 @@ module Ms
 
       include Enumerable
 
-      attr_reader :manager_magic, :manager_version, :manager_length, :resource_version,
-                  :resource_count, :type_count
+      attr_reader :manager_magic, :manager_version, :manager_length, :resource_version, :resource_count, :type_count
 
       def initialize(uri)
         @file = open(uri, 'rb')
         read_headers
       rescue => e
-        raise ArgumentError, "file does not appear to be a resources @file (#{e})"
+        fail ArgumentError, "file does not appear to be a resources file (#{e})"
         @file.close
       end
 
@@ -34,7 +33,7 @@ module Ms
       def type_of(name)
         info = info_for_name(name)
         if info
-          type = RESOURCE_TYPES.find { |_,v| info.type_index == v }
+          type = RESOURCE_TYPES.find { |_, v| info.type_index == v }
           type && type.first
         end
       end
@@ -57,7 +56,7 @@ module Ms
 
       def read_headers
         @manager_magic = read_uint32
-        raise 'magic (%08X)' % manager_magic unless MAGIC_NUMBER == manager_magic
+        fail 'magic (%08X)' % manager_magic unless MAGIC_NUMBER == manager_magic
 
         @manager_version = read_uint32
         @manager_length = read_uint32
@@ -65,12 +64,12 @@ module Ms
         if 1 == manager_version
           @reader_class = @file.read(@manager_length)
         else
-          raise 'Unsupported manager version (%d)' % manager_version
+          fail 'Unsupported manager version (%d)' % manager_version
         end
 
         @resource_version = read_uint32
         unless [1, 2].include?(resource_version)
-          raise 'Unsupported resource version (%d)' % resource_version
+          fail 'Unsupported resource version (%d)' % resource_version
         end
 
         @resource_count = read_uint32
@@ -89,9 +88,8 @@ module Ms
         @data_section_offset = read_uint32
         @name_section_offset = @file.pos
 
+        # cache the file location and type of all resources
         @resource_infos = @positions.map { |pos| read_resource_info(pos) }
-
-        @file.seek(@name_section_offset)
       end
 
       def read_resource_info(name_position)
@@ -102,7 +100,7 @@ module Ms
         seek_to_data(read_uint32)
         type_index = read_7bit_encoded_int
 
-        OpenStruct.new name: name, value_position: @file.pos, type_index: type_index
+        OpenStruct.new(name: name, value_position: @file.pos, type_index: type_index)
       end
 
       def read(bytes)
@@ -140,7 +138,6 @@ module Ms
       def read_7bit_encoded_int
         ret = 0
         shift = 0
-        b = 0
 
         begin
           b = read_byte

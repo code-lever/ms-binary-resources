@@ -23,7 +23,7 @@ module Ms
       timespan: 16,
       bytearray: 32,
       stream: 33,
-      fistcustom: 64,
+      fistcustom: 64
     }
 
   end
