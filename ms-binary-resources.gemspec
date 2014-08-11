@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Nick Veys']
   spec.email         = ['nick@codelever.com']
   spec.summary       = %q{Read binary resource files}
-  spec.description   = %q{}
+  spec.description   = %q{Read binary resource files created with ResourceWriter or resgen.}
   spec.homepage      = 'https://github.com/code-lever/ms-binary-resources'
   spec.license       = 'MIT'
 
