@@ -15,7 +15,6 @@ module Ms
         read_headers
       rescue => e
         fail ArgumentError, "file does not appear to be a resources file (#{e})"
-        @file.close
       end
 
       def each(&block)
